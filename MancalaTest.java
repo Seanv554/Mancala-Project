@@ -14,7 +14,17 @@ public class MancalaTest {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        BoardModel m = new BoardModel();
+        System.out.println(m);
+        m.move(0);
+        System.out.println(m);
+        m.move(1);
+        System.out.println(m);
+        m.move(1);
+        System.out.println(m);
+        m.move(1);
+        System.out.println(m);
+        
     }
     
 }

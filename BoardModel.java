@@ -14,8 +14,8 @@ import javax.swing.event.ChangeListener;
  */
 public class BoardModel {
     private int storeA, storeB, currentPlayer;
-    private int[] pitA, pitB, lastMove;
-    private ArrayList<ChangeListener> listeners;
+    private int[] pitA, pitB, lastMove; 
+    private ArrayList<ChangeListener> listeners; //ChangeListeners
     
     BoardModel(){
         this(4);
@@ -24,10 +24,9 @@ public class BoardModel {
     BoardModel(int n){
         storeA = 0;
         storeB = 0;
-        pitA = new int[6];
-        pitB = new int[6];
-        lastMove = new int[2];
-        listeners = new ArrayList<>();
+        pitA = new int[6]; //front row of pits, Player A
+        pitB = new int[6]; //back row of pits, Player B
+        listeners = new ArrayList<>(); 
         for(int i = 0; i < 6; i++){
             pitA[i] = n;
             pitB[i] = n;
@@ -61,6 +60,7 @@ public class BoardModel {
                 i = 0;
             }
         }
+        currentPlayer = (currentPlayer == 0)? 1 : 0;
         frontRow[x] = 0;
     }
     
@@ -75,6 +75,64 @@ public class BoardModel {
     
     public String toString(){
         String board = "";
+        board += "------------------------------\n";
+        board += "[ " + storeB + " ]";
+        for(int i = 0; i < 6; i++){
+            board += " ( " + pitB[i] + " ) ";
+        }
+        board += "[  ]\n";
+        board += "[  ]"; 
+        for(int i = 0; i < 6; i++){
+            board += " ( " + pitA[i] + " ) ";
+        }
+        board += "[ " + storeA + " ]\n";
+        
         return board;
+    }
+    
+    public int getStore(int player)
+    {
+        //player a is storeA
+        //player b is storeB
+        
+        if(player == 0)
+        {
+            return storeA; 
+        }
+
+        return storeB; 
+    }
+    
+
+    public int getPit(int player, int i)
+    {
+        return (player == 0)? pitA[i] : pitB[i];
+    }
+
+    public int getTotal(int player)
+    {
+        return (player == 0)? storeA : storeB;
+    }
+
+    public int checkVictory()
+    {
+        return 0; //needs implementation
+    }
+
+    public int getVictor()
+    {
+        return 0; //needs implementation
+    }
+
+    public void notifyListeners()
+    {
+        for(ChangeListener l : listeners){
+            
+        }
+    }
+
+    public void attach(ChangeListener listener)
+    {
+
     }
 }
