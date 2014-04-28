@@ -1,6 +1,8 @@
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 
 /*
  * To change this template, choose Tools | Templates
@@ -16,7 +18,7 @@ import java.awt.Shape;
  * 
  */
 public class DiamondPitBoard implements BoardStyle{
-    
+    private int currentColor = 0;
     private int width, height;
     
     public DiamondPitBoard(){
@@ -35,13 +37,23 @@ public class DiamondPitBoard implements BoardStyle{
     }
 
     @Override
-    public void arrangeMarbles(Graphics g, int[] scores) {
+    public void arrangePitMarbles(Graphics g, int[] scores) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Shape[] getShapes() {
         return shapes;
+    }
+
+    @Override
+    public void arrangePitMarblesHelper(Graphics g, int n, Rectangle2D r) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void drawMarble(int x, int y, Graphics g) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

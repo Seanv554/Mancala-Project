@@ -40,7 +40,7 @@ public class BoardView extends JPanel implements ChangeListener {
         //JFrame stylePrompt = new JFrame("Please choose your style");
         //stylePrompt.setVisible(true);
         useStyle(style);
-        data = new BoardModel();
+        data = new BoardModel(11);
         control = new BoardController(data);
         final Shape[] shapes = style.getShapes();
         this.addMouseListener(new MouseAdapter() {
@@ -64,7 +64,7 @@ public class BoardView extends JPanel implements ChangeListener {
         super.paintComponent(g); //To change body of generated methods, choose Tools | Templates.
         style.paintStyle(g);
         int[] score = data.getPits();
-        style.arrangeMarbles(g, score);
+        style.arrangePitMarbles(g, score);
     }
 
     @Override
