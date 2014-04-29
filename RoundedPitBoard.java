@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 
 /*
  * To change this template, choose Tools | Templates
@@ -41,43 +42,77 @@ public class RoundedPitBoard implements BoardStyle {
     public void paintStyle(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(3));
-        g2.drawRoundRect(30, 30, width / 8, height - (height / 8), 20, 20);
+
+        //Create store B
+        RoundRectangle2D.Double currentStore;
+        currentStore = new RoundRectangle2D.Double(30, 30, width / 8,
+                height - (height / 8), 20, 20);
+        storeShapes[1] = currentStore;
+        g2.draw(currentStore);
+        
+        //Draw Mancala B label
+        String mLabel = "MANCALA B";
+        g2.setFont(new Font("Arial Bold", Font.BOLD, 20));
+        for(int i = 0; i < mLabel.length(); i++){
+            g2.drawString(Character.toString(mLabel.charAt(i)), 
+                    (float)(width*0.0076), (float)(height*0.24)+(20*i));
+        }
+
+        //Create B pits
         for (int i = 0; i < 6; i++) {
+            //Pit Label
             String label = "B" + (i + 1);
             g2.setFont(new Font("Arial Bold", Font.BOLD, 20));
-            g2.drawString(label, (int) 
-                    (width * 0.089) + (width / 8) + (pitSpacing * i), 
+            g2.drawString(label, (int) (width * 0.089) + (width / 8) + (pitSpacing * i),
                     (int) (height * 0.08));
+            //Pit
             Ellipse2D.Double currentPit = new Ellipse2D.Double(
-                    (width * 0.053) + (width / 8) + (pitSpacing * i), 
+                    (width * 0.053) + (width / 8) + (pitSpacing * i),
                     (int) (height * 0.12), pitWidth, pitHeight);
-            shapes[i + 6] = currentPit;
+
+            pitShapes[11 - i] = currentPit;
             g2.draw(currentPit);
         }
-        g2.drawRoundRect((int) 
-                (width * 0.053) + (width / 8) + (pitSpacing * 6), 
-                (int) (height * 0.12), 
+        //Create store A
+        currentStore = new RoundRectangle2D.Double(
+                (width * 0.053) + (width / 8) + (pitSpacing * 6), (height * 0.12),
                 width / 8, height - (height / 8), 20, 20);
+        storeShapes[0] = currentStore;
+        g2.draw(currentStore);
+        
+        //Draw Mancala A label
+        mLabel = "MANCALA A";
+        g2.setFont(new Font("Arial Bold", Font.BOLD, 20));
+        for(int i = 0; i < mLabel.length(); i++){
+            g2.drawString(Character.toString(mLabel.charAt(i)), 
+                    (float)(width*1.107), (float)(height*0.24)+(20*i));
+        }
+
+        //Create A pits
         for (int i = 0; i < 6; i++) {
-            Ellipse2D.Double currentPit = new Ellipse2D.Double(
-                    (width * 0.053) + (width / 8) + (pitSpacing * i), 
-                    (height * 0.64), pitWidth, pitHeight);
+            //Pit Label
             String label = "A" + (i + 1);
-            g2.drawString(label, (int) 
-                    (width * 0.089) + (width / 8) + (pitSpacing * i), 
+            g2.drawString(label, (int) (width * 0.089) + (width / 8) + (pitSpacing * i),
                     (int) (height * 1.04));
-            shapes[i] = currentPit;
+            //Pit
+            Ellipse2D.Double currentPit = new Ellipse2D.Double(
+                    (width * 0.053) + (width / 8) + (pitSpacing * i),
+                    (height * 0.64), pitWidth, pitHeight);
+            pitShapes[i] = currentPit;
             g2.draw(currentPit);
         }
     }
 
     @Override
     public void arrangePitMarbles(Graphics g, int[] scores) {
+        
         for (int i = 0; i < 12; i++) {
-            Rectangle2D r = shapes[i].getBounds2D();
-            int x = (int) r.getX();
-            int y = (int) r.getY();
-            arrangePitMarblesHelper(g, scores[i], r);
+            Rectangle2D r = pitShapes[i].getBounds2D();
+            if (scores[i] == 1) {
+                drawMarble((int)r.getX()+32, (int)r.getY()+32, g);
+            } else {
+                arrangePitMarblesHelper(g, scores[i], r);
+            }
         }
     }
 
@@ -137,6 +172,38 @@ public class RoundedPitBoard implements BoardStyle {
 
     @Override
     public Shape[] getShapes() {
-        return shapes;
+        return pitShapes;
+    }
+
+    @Override
+    public void arrangeStoreMarbles(Graphics g, int[] scores) {
+        for (int i = 0; i < 2; i++) {
+            Rectangle2D r = storeShapes[i].getBounds2D();
+            int x = (int) r.getX();
+            int y = (int) r.getY();
+            arrangeStoreMarblesHelper(g, scores[i], r);
+        }
+    }
+
+    @Override
+    public void arrangeStoreMarblesHelper(Graphics g, int n, Rectangle2D r) {
+        int x = (int) r.getX();
+        int y = (int) r.getY();
+        if (n == 0) {
+            return;
+        } else if (n == 1) {
+            drawMarble(x, y, g);
+            return;
+        }
+        double xInterval = r.getWidth() / 4;
+        double yInterval = r.getHeight() / 14;
+        Rectangle2D.Double subRec;
+        for (int i = 0; i < 14 && n != 0; i++) {
+            for (int j = 0; j < 4 && n != 0; j++) {
+                subRec = new Rectangle2D.Double(x + xInterval * j, y + yInterval * i, xInterval, yInterval);
+                arrangeStoreMarblesHelper(g, 1, subRec);
+                n--;
+            }
+        }
     }
 }

@@ -43,7 +43,7 @@ public class DiamondPitBoard implements BoardStyle{
 
     @Override
     public Shape[] getShapes() {
-        return shapes;
+        return pitShapes;
     }
 
     @Override
@@ -53,6 +53,16 @@ public class DiamondPitBoard implements BoardStyle{
 
     @Override
     public void drawMarble(int x, int y, Graphics g) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void arrangeStoreMarbles(Graphics g, int[] scores) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void arrangeStoreMarblesHelper(Graphics g, int n, Rectangle2D r) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
