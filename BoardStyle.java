@@ -26,11 +26,13 @@ interface BoardStyle {
     public static final Shape[] storeShapes = new Shape[2];
     public static final Color[] marbleColors = {Color.RED, Color.CYAN, 
         Color.BLUE, Color.MAGENTA, Color.ORANGE, Color.GREEN, Color.PINK, Color.YELLOW};
-    public void paintStyle(Graphics g);
+    public void paintStyle(Graphics g, int[] pitScores, int[] storeScores);
     public void arrangePitMarbles(Graphics g, int[] scores);
     public void arrangePitMarblesHelper(Graphics g, int n, Rectangle2D r);
     public void arrangeStoreMarbles(Graphics g, int[] scores);
     public void arrangeStoreMarblesHelper(Graphics g, int n, Rectangle2D r);
     public void drawMarble(int x, int y, Graphics g);
+    public int getWidth();
+    public int getHeight();
     public Shape[] getShapes();
 }

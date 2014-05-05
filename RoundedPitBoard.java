@@ -2,12 +2,15 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.font.GlyphVector;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import javax.swing.JLabel;
 
 /*
  * To change this template, choose Tools | Templates
@@ -39,13 +42,13 @@ public class RoundedPitBoard implements BoardStyle {
     }
 
     @Override
-    public void paintStyle(Graphics g) {
+    public void paintStyle(Graphics g, int[] pitScores, int[] storeScores) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(3));
 
         //Create store B
         RoundRectangle2D.Double currentStore;
-        currentStore = new RoundRectangle2D.Double(30, 30, width / 8,
+        currentStore = new RoundRectangle2D.Double(30, 30, width / 8 - 2,
                 height - (height / 8), 20, 20);
         storeShapes[1] = currentStore;
         g2.draw(currentStore);
@@ -57,25 +60,42 @@ public class RoundedPitBoard implements BoardStyle {
             g2.drawString(Character.toString(mLabel.charAt(i)), 
                     (float)(width*0.0076), (float)(height*0.24)+(20*i));
         }
+        
+        //Draw Mancala B score label;
+        g2.drawRoundRect((int) (width*0.0076)-2, 
+                (int)((height*0.24)+(height*0.768)) + 3, 40, 20, 5, 5);
+        g2.setColor(Color.white);
+        g2.fillRoundRect((int) (width*0.0076)-2, 
+                (int)((height*0.24)+(height*0.768)) + 3, 40, 20, 5, 5);
+        g2.setColor(Color.black);
+        String storeBScore = Integer.toString(storeScores[1]);
+        g2.drawString(storeBScore, (float)(width*0.0076), 
+                (float)((height*0.24)+(height*0.84) + 3));
+        
 
         //Create B pits
         for (int i = 0; i < 6; i++) {
             //Pit Label
-            String label = "B" + (i + 1);
+            String label = "B" + (6 - i);
             g2.setFont(new Font("Arial Bold", Font.BOLD, 20));
             g2.drawString(label, (int) (width * 0.089) + (width / 8) + (pitSpacing * i),
                     (int) (height * 0.08));
             //Pit
             Ellipse2D.Double currentPit = new Ellipse2D.Double(
-                    (width * 0.053) + (width / 8) + (pitSpacing * i),
+                    (int)(width * 0.053) + (width / 8) + (pitSpacing * i),
                     (int) (height * 0.12), pitWidth, pitHeight);
-
+            
+            //Pit Score
+            g2.drawString(Integer.toString(pitScores[11 - i]), 
+                    (int)(width * 0.053) + (width / 8) + (pitSpacing * i),
+                    (int) (height * 0.47) + 8);
+            
             pitShapes[11 - i] = currentPit;
             g2.draw(currentPit);
         }
         //Create store A
         currentStore = new RoundRectangle2D.Double(
-                (width * 0.053) + (width / 8) + (pitSpacing * 6), (height * 0.12),
+                (width * 0.053) + (width / 8) + (pitSpacing * 6) - 4, (height * 0.12),
                 width / 8, height - (height / 8), 20, 20);
         storeShapes[0] = currentStore;
         g2.draw(currentStore);
@@ -85,22 +105,42 @@ public class RoundedPitBoard implements BoardStyle {
         g2.setFont(new Font("Arial Bold", Font.BOLD, 20));
         for(int i = 0; i < mLabel.length(); i++){
             g2.drawString(Character.toString(mLabel.charAt(i)), 
-                    (float)(width*1.107), (float)(height*0.24)+(20*i));
+                    (float)(width*1.107) - 10, (float)(height*0.24)+(20*i));
         }
+        
+        //Draw Mancala A score label;
+        g2.drawRoundRect((int)(width*1.107)-12, 
+                (int)((height*0.24)+(height*0.768)) + 3, 40, 20, 5, 5);
+        g2.setColor(Color.white);
+        g2.fillRoundRect((int)(width*1.107)-12, 
+                (int)((height*0.24)+(height*0.768)) + 3, 40, 20, 5, 5);
+        g2.setColor(Color.black);
+        String storeAScore = Integer.toString(storeScores[0]);
+        g2.drawString(storeAScore, (float)(width*1.107)-12, 
+                (float)((height*0.24)+(height*0.84) + 3));
+        
 
         //Create A pits
         for (int i = 0; i < 6; i++) {
             //Pit Label
             String label = "A" + (i + 1);
             g2.drawString(label, (int) (width * 0.089) + (width / 8) + (pitSpacing * i),
-                    (int) (height * 1.04));
+                    (int) (height * 1.04) + 14);
             //Pit
             Ellipse2D.Double currentPit = new Ellipse2D.Double(
                     (width * 0.053) + (width / 8) + (pitSpacing * i),
-                    (height * 0.64), pitWidth, pitHeight);
+                    (height * 0.64) + 14, pitWidth, pitHeight);
+            
+            //Pit Scores
+            g2.drawString(Integer.toString(pitScores[i]), 
+                    (int)(width * 0.053) + (width / 8) + (pitSpacing * i),
+                    (int)(height * 0.64) + 10);
+            
             pitShapes[i] = currentPit;
             g2.draw(currentPit);
         }
+        this.arrangePitMarbles(g, pitScores);    
+        this.arrangeStoreMarbles(g, storeScores);
     }
 
     @Override
@@ -158,7 +198,7 @@ public class RoundedPitBoard implements BoardStyle {
     @Override
     public void drawMarble(int x, int y, Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-
+        
         g2.setStroke(new BasicStroke(2));
         g2.setColor(Color.black);
         g2.drawOval(x, y, marbleSize, marbleSize);
@@ -205,5 +245,15 @@ public class RoundedPitBoard implements BoardStyle {
                 n--;
             }
         }
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
     }
 }
