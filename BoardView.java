@@ -15,19 +15,31 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* File: BoardView.java
+ * Author: Sean Vail
+ * Class: CS-151
+ * Section: 02
+ * Assignment: Mancala Group Project
+ * Date: Apr 27, 2014
  */
 
-/*
- * Author: Sean Vail
- * Class:
- * Section:
- * Assignment:
- * Date: Apr 27, 2014
+/**
+ *
+ * @author Sean Vail
+ * BoardView
+ * Implements: ChangeListener
+ *
+ * <p>
+ * Generates a Visual Mancala board and an underlying BoardModel object to  
+ * handle game mechanics.
  * 
+ * Uses a BoardStyle Object to determine the style in which the pits and stores
+ * are drawn.
+ * 
+ * Sends all clicks to BoardController to be processed and have the
+ * corresponding move executed based on which pit was clicked on.
+ * 
+ * </p>
  */
 public class BoardView extends JPanel implements ChangeListener {
 
@@ -35,15 +47,23 @@ public class BoardView extends JPanel implements ChangeListener {
     private BoardModel data;
     private final BoardPanel board;
     private final JLabel currentPlayer = new JLabel("Player A's Turn");
-    private final static int viewWIDTH = 800;
-    private final static int viewHEIGHT = 300;
-    final JButton undoButton;
+    public final static int viewWIDTH = 800;
+    public final static int viewHEIGHT = 300;
+    private final JButton undoButton;
     private boolean gameOver = false;
 
+    /**
+     *
+     */
     public BoardView() {
         this(new RoundedPitBoard(650, 250), 4);
     }
 
+    /**
+     *
+     * @param style
+     * @param initialMarbles
+     */
     public BoardView(BoardStyle style, int initialMarbles) {
         super();
 
@@ -215,6 +235,7 @@ public class BoardView extends JPanel implements ChangeListener {
         gameOver = false;
     }
 
+    
     private boolean isOver() {
         return gameOver;
     }

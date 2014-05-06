@@ -45,6 +45,11 @@ public class BoardModel {
     /*
      * Sets up the board for a new game
      */
+
+    /**
+     *
+     */
+    
     public void newGame() {
         storeA = 0; //holds score for Player A (player 0)
         storeB = 0; //holds score for Player B (player 1)
@@ -63,6 +68,9 @@ public class BoardModel {
      * @param x the pit the player wants to move
      */
 
+    /**
+     *
+     */
     public void backUp() {
         pitsBackUp = new int[12];
         for (int i = 0; i < 12; i++) {
@@ -78,6 +86,12 @@ public class BoardModel {
      * Basic traversal for the Mancala game
      * @param x the pit you want to move (choose b/w 0 to 11)
      */
+
+    /**
+     *
+     * @param x
+     */
+    
     public void move(int x) {
 
         int[] rows = pits; //copy of the array "pits"
@@ -256,11 +270,20 @@ public class BoardModel {
      * getCanUndo returns the canUndo boolean variable
      * @return canUndo true if the player can undo and false if not
      */
+
+    /**
+     *
+     * @return
+     */
+    
     public boolean canUndo()
     {
         return canUndo;
     }
     
+    /**
+     *
+     */
     public void undoLastMove() {
         if (!canUndo) {
             System.err.println("Error: Cannot undo");
@@ -283,6 +306,10 @@ public class BoardModel {
         notifyListeners();
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPlayer() {
         return currentPlayer;
     }
@@ -307,6 +334,11 @@ public class BoardModel {
         return board;
     }
 
+    /**
+     *
+     * @param player
+     * @return
+     */
     public int getStore(int player) {
         //player a is storeA
         //player b is storeB
@@ -321,6 +353,12 @@ public class BoardModel {
     /*
      * 
      */
+
+    /**
+     *
+     * @return
+     */
+    
     public int[] getPits() {
         //return (player == 0)? pitA[i] : pitB[i];
         return pits;
@@ -332,6 +370,13 @@ public class BoardModel {
      * @return storeA if parameter is 0
      * @return storeB if parameter is 1
      */
+
+    /**
+     *
+     * @param player
+     * @return
+     */
+    
     public int getTotal(int player) {
         return (player == 0) ? storeA : storeB;
     }
@@ -341,6 +386,12 @@ public class BoardModel {
      * @return true if pits on either side are collectively empty
      * @return false if pits on either side are NOT collectively empty
      */
+
+    /**
+     *
+     * @return
+     */
+    
     public boolean checkVictory() {
         int sumA = 0;
         int sumB = 0;
@@ -378,6 +429,12 @@ public class BoardModel {
      * @return 1 player B won
      * @return 2 player A and B tie
      */
+
+    /**
+     *
+     * @return
+     */
+    
     public int getVictor() {
         if (checkVictory() == true) {
             if (storeA > storeB) {
@@ -395,6 +452,11 @@ public class BoardModel {
     /*
      * Notify listeners of a state change
      */
+
+    /**
+     *
+     */
+    
     public void notifyListeners() {
         for (ChangeListener l : listeners) {
             l.stateChanged(null);
@@ -404,6 +466,12 @@ public class BoardModel {
     /*
      * attach listeners with ChangeListener listerner
      */
+
+    /**
+     *
+     * @param listener
+     */
+    
     public void attach(ChangeListener listener) {
         listeners.add(listener);
     }

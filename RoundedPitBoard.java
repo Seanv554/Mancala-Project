@@ -2,20 +2,12 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.font.GlyphVector;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
-import javax.swing.JLabel;
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /*
  * Author: Sean Vail
@@ -25,22 +17,42 @@ import javax.swing.JLabel;
  * Date: Apr 27, 2014
  * 
  */
+
+/**
+ *
+ * @author Sean Vail
+ */
+
 public class RoundedPitBoard implements BoardStyle {
 
     private int currentColor = 0;
     private int width, height;
     private int marbleSize = 15;
 
+    /**
+     *
+     */
     public RoundedPitBoard() {
-        width = 750;
+        width = 650;
         height = 250;
     }
 
+    /**
+     *
+     * @param width
+     * @param height
+     */
     public RoundedPitBoard(int width, int height) {
         this.width = width;
         this.height = height;
     }
 
+    /**
+     *
+     * @param g
+     * @param pitScores
+     * @param storeScores
+     */
     @Override
     public void paintStyle(Graphics g, int[] pitScores, int[] storeScores) {
         Graphics2D g2 = (Graphics2D) g;
@@ -143,6 +155,11 @@ public class RoundedPitBoard implements BoardStyle {
         this.arrangeStoreMarbles(g, storeScores);
     }
 
+    /**
+     *
+     * @param g
+     * @param scores
+     */
     @Override
     public void arrangePitMarbles(Graphics g, int[] scores) {
         
@@ -156,6 +173,12 @@ public class RoundedPitBoard implements BoardStyle {
         }
     }
 
+    /**
+     *
+     * @param g
+     * @param n
+     * @param r
+     */
     @Override
     public void arrangePitMarblesHelper(Graphics g, int n, Rectangle2D r) {
         int x = (int) r.getX() + (int) (width * 0.002);
@@ -195,6 +218,12 @@ public class RoundedPitBoard implements BoardStyle {
 
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param g
+     */
     @Override
     public void drawMarble(int x, int y, Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
@@ -210,11 +239,20 @@ public class RoundedPitBoard implements BoardStyle {
         g2.fillOval(x, y, marbleSize, marbleSize);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Shape[] getShapes() {
         return pitShapes;
     }
 
+    /**
+     *
+     * @param g
+     * @param scores
+     */
     @Override
     public void arrangeStoreMarbles(Graphics g, int[] scores) {
         for (int i = 0; i < 2; i++) {
@@ -225,6 +263,12 @@ public class RoundedPitBoard implements BoardStyle {
         }
     }
 
+    /**
+     *
+     * @param g
+     * @param n
+     * @param r
+     */
     @Override
     public void arrangeStoreMarblesHelper(Graphics g, int n, Rectangle2D r) {
         int x = (int) r.getX();
@@ -247,11 +291,19 @@ public class RoundedPitBoard implements BoardStyle {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int getWidth() {
         return width;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int getHeight() {
         return height;

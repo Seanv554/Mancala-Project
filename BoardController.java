@@ -15,18 +15,34 @@ import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
 
+/**
+ *
+ * @author Sean Vail
+ */
 public class BoardController {
 
     BoardModel data;
 
+    /**
+     *
+     */
     public BoardController() {
         this.data = null;
     }
 
+    /**
+     *
+     * @param data
+     */
     public BoardController(BoardModel data) {
         this.data = data;
     }
 
+    /**
+     *
+     * @param e
+     * @param shapes
+     */
     public void processClick(MouseEvent e, Shape[] shapes) {
         Point location = new Point(e.getX(), e.getY());
         if (data.getPlayer() == 0) {

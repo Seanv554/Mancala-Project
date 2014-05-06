@@ -73,9 +73,9 @@ public class MancalaTest {
                     marbles = 3;
                 }
                 if (roundedOption.isSelected()) {
-                    startGame(new RoundedPitBoard(650, 250), marbles);
+                    startGame(new RoundedPitBoard(), marbles);
                 } else if (rectangularOption.isSelected()) {
-                    startGame(new RectangularPitBoard(650, 250), marbles);
+                    startGame(new RectangularPitBoard(), marbles);
                 }
                 if ((rectangularOption.isSelected() || roundedOption.isSelected()) && (threeMarbles.isSelected() || fourMarbles.isSelected())) {
                     stylePrompt.dispose();
