@@ -25,21 +25,19 @@ import javax.swing.event.ChangeListener;
 
 /**
  *
+ * @author Nick Saric
  * @author Sean Vail
- * BoardView
- * Implements: ChangeListener
+ * @author Alvin Ko BoardView Implements: ChangeListener
  *
- * <p>
- * Generates a Visual Mancala board and an underlying BoardModel object to  
+ * Generates a Visual Mancala board and an underlying BoardModel object to
  * handle game mechanics.
- * 
+ *
  * Uses a BoardStyle Object to determine the style in which the pits and stores
  * are drawn.
- * 
+ *
  * Sends all clicks to BoardController to be processed and have the
  * corresponding move executed based on which pit was clicked on.
- * 
- * </p>
+ *
  */
 public class BoardView extends JPanel implements ChangeListener {
 
@@ -53,16 +51,19 @@ public class BoardView extends JPanel implements ChangeListener {
     private boolean gameOver = false;
 
     /**
-     *
+     * Constructs default BoardView with RoundPitBoard Style and 4 initial
+     * marbles
      */
     public BoardView() {
         this(new RoundedPitBoard(650, 250), 4);
     }
 
     /**
+     * Constructs BoardView with specified BoardStyle and specified number of
+     * initial starting marbles
      *
-     * @param style
-     * @param initialMarbles
+     * @param style - BoardStyle to be used
+     * @param initialMarbles - Number of marbles for initial start
      */
     public BoardView(BoardStyle style, int initialMarbles) {
         super();
@@ -113,7 +114,6 @@ public class BoardView extends JPanel implements ChangeListener {
                     }
                 });
                 okayButton.addActionListener(new ActionListener() {
-
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         if (roundedChoice.isSelected()) {
@@ -129,7 +129,6 @@ public class BoardView extends JPanel implements ChangeListener {
                     }
                 });
                 cancelButton.addActionListener(new ActionListener() {
-
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         f.dispose();
@@ -155,7 +154,6 @@ public class BoardView extends JPanel implements ChangeListener {
         control = new BoardController(data);
         final Shape[] shapes = style.getShapes();
         board.addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e); //To change body of generated methods, choose Tools | Templates.
@@ -167,7 +165,6 @@ public class BoardView extends JPanel implements ChangeListener {
                 }
 
             }
-
         });
 
         this.setPreferredSize(new Dimension(viewWIDTH, viewHEIGHT));
@@ -193,6 +190,9 @@ public class BoardView extends JPanel implements ChangeListener {
         super.repaint();
     }
 
+    /**
+     * Used to disable the mouse input processing once the game has ended
+     */
     private void gameOver() {
         gameOver = true;
         JLabel l;
@@ -207,7 +207,6 @@ public class BoardView extends JPanel implements ChangeListener {
 
         JButton newGame = new JButton("New Game");
         newGame.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 data.newGame();
@@ -217,7 +216,6 @@ public class BoardView extends JPanel implements ChangeListener {
         });
         JButton exitGame = new JButton("Exit");
         exitGame.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
@@ -231,31 +229,60 @@ public class BoardView extends JPanel implements ChangeListener {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    /**
+     * Used to re-enable the mouse input processing incase the user undoes their
+     * last move
+     */
     private void resetGameOver() {
         gameOver = false;
     }
 
-    
+    /**
+     * Used to check if the game is over by an action listener
+     *
+     * @return boolean - whether or not game is over
+     */
     private boolean isOver() {
         return gameOver;
     }
 
+    /**
+     * A JPanel that contains the rendering of the actual Mancala board
+     */
     private class BoardPanel extends JPanel {
 
         private BoardStyle style;
 
+        /**
+         * Creates the default Mancala board with a Rounded Pit Style
+         */
         public BoardPanel() {
             this(new RoundedPitBoard(650, 250));
         }
 
+        /**
+         * Creates a mancala board with a specified style
+         *
+         * @param style
+         */
         public BoardPanel(BoardStyle style) {
             this.style = style;
         }
 
+        /**
+         * Returns the style currently being used
+         *
+         * @return BoardStyle - Style currently being used
+         */
         public BoardStyle getStyle() {
             return style;
         }
 
+        /**
+         * Sets the style to be used to render the various objects on the board
+         *
+         * @param style - BoardStyle to be used
+         */
         public void useStyle(BoardStyle style) {
             this.style = style;
         }
@@ -266,6 +293,8 @@ public class BoardView extends JPanel implements ChangeListener {
             int[] pitScores = data.getPits();
             int[] storeScores = {data.getStore(0), data.getStore(1)};
             style.paintStyle(g, pitScores, storeScores);
+            style.arrangePitMarbles(g, pitScores);
+            style.arrangeStoreMarbles(g, storeScores);
         }
     }
 }

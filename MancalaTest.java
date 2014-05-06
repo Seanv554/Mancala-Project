@@ -6,16 +6,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author Sean Vail
+/* File: BoardView.java
+ * Author: Sean Vail
+ * Class: CS-151
+ * Section: 02
+ * Assignment: Mancala Group Project
+ * Date: Apr 27, 2014
  */
 public class MancalaTest {
 

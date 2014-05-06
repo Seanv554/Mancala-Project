@@ -1,38 +1,79 @@
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /*
  * Author: Sean Vail
- * Class:
- * Section:
- * Assignment:
+ * Class: CS-151
+ * Section: 02
+ * Assignment: Mancala Project
  * Date: Apr 27, 2014
  * 
  */
+
+/**
+ * @author Nick Saric
+ * @author Sean Vail
+ * @author Alvin Ko
+ *
+ * Interface BoardStyle Implemented by: RectanglularPitBoard and RoundedPitBoard
+ *
+ * Each BoardStyle provides the specific implementation by which to render the
+ * Mancala board that can be decided upon by the user during runtime.
+ */
 interface BoardStyle {
+
     public static final int pitWidth = 75;
     public static final int pitHeight = 75;
     public static final int pitSpacing = pitWidth + 10;
-    public static final Shape[] pitShapes = new Shape[12]; //0-5 Player A, 6-11 Player B
-    public static final Shape[] storeShapes = new Shape[2];
-    public static final Color[] marbleColors = {Color.RED, Color.CYAN, 
-        Color.BLUE, Color.MAGENTA, Color.ORANGE, Color.GREEN, Color.PINK, Color.YELLOW};
+
+    /**
+     * Strategy by which to paint the pit and store areas of the Mancala board
+     * as well as a marble counter for each pit and store based on given scores
+     *
+     * @param g - Graphics Object
+     * @param pitScores - Current Pit Scores, int[12] expected
+     * @param storeScores - Current Mancala Scores , int[2] expected
+     */
     public void paintStyle(Graphics g, int[] pitScores, int[] storeScores);
+
+    /**
+     * Used to arrange marbles in a way such that they visually fit into each
+     * pit, up to 12 visible at a time.
+     *
+     * @param g - Graphics Object
+     * @param scores - Current Pit Scores, int[12] expected
+     */
     public void arrangePitMarbles(Graphics g, int[] scores);
-    public void arrangePitMarblesHelper(Graphics g, int n, Rectangle2D r);
+
+    /**
+     * Used to arrange marbles in a way such that they visually fit into each
+     * Mancala.
+     *
+     * @param g - Graphics Object
+     * @param scores - Current Mancala Scores, int[2] expected
+     */
     public void arrangeStoreMarbles(Graphics g, int[] scores);
-    public void arrangeStoreMarblesHelper(Graphics g, int n, Rectangle2D r);
-    public void drawMarble(int x, int y, Graphics g);
+
+    /**
+     *
+     * @return int - Specified Width of BoardStyle
+     */
     public int getWidth();
+
+    /**
+     *
+     * @return int - Specified Height of BoardStyle
+     */
     public int getHeight();
+
+    /**
+     * Returns references of all the pit shapes drawn by the BoardStyle. So that
+     * the mouse listener may check to see if clicked Points are contained
+     * within
+     *
+     * @return Shape[12] - References to all pit Shapes drawn by Style
+     */
     public Shape[] getShapes();
 }

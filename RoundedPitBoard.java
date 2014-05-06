@@ -17,42 +17,44 @@ import java.awt.geom.RoundRectangle2D;
  * Date: Apr 27, 2014
  * 
  */
-
 /**
- *
+ * @author Nick Saric
  * @author Sean Vail
+ * @author Alvin Ko
  */
-
 public class RoundedPitBoard implements BoardStyle {
 
+    private final Shape[] pitShapes; //0-5 Player A, 6-11 Player B
+    private final Shape[] storeShapes;
+    private static final Color[] marbleColors = {Color.RED, Color.CYAN,
+        Color.BLUE, Color.MAGENTA, Color.ORANGE, Color.GREEN, Color.PINK, Color.YELLOW};
     private int currentColor = 0;
     private int width, height;
     private int marbleSize = 15;
 
     /**
-     *
+     * Constructs Default Rounded Pit Board
      */
     public RoundedPitBoard() {
+        this.pitShapes = new Shape[12];
+        this.storeShapes = new Shape[2];
         width = 650;
         height = 250;
     }
 
     /**
+     * Constructs Rounded Pit Board with Specified width and height
      *
-     * @param width
-     * @param height
+     * @param width - Width to be used
+     * @param height - Height to be used
      */
     public RoundedPitBoard(int width, int height) {
+        this.pitShapes = new Shape[12];
+        this.storeShapes = new Shape[2];
         this.width = width;
         this.height = height;
     }
 
-    /**
-     *
-     * @param g
-     * @param pitScores
-     * @param storeScores
-     */
     @Override
     public void paintStyle(Graphics g, int[] pitScores, int[] storeScores) {
         Graphics2D g2 = (Graphics2D) g;
@@ -64,26 +66,26 @@ public class RoundedPitBoard implements BoardStyle {
                 height - (height / 8), 20, 20);
         storeShapes[1] = currentStore;
         g2.draw(currentStore);
-        
+
         //Draw Mancala B label
         String mLabel = "MANCALA B";
         g2.setFont(new Font("Arial Bold", Font.BOLD, 20));
-        for(int i = 0; i < mLabel.length(); i++){
-            g2.drawString(Character.toString(mLabel.charAt(i)), 
-                    (float)(width*0.0076), (float)(height*0.24)+(20*i));
+        for (int i = 0; i < mLabel.length(); i++) {
+            g2.drawString(Character.toString(mLabel.charAt(i)),
+                    (float) (width * 0.0076), (float) (height * 0.24) + (20 * i));
         }
-        
+
         //Draw Mancala B score label;
-        g2.drawRoundRect((int) (width*0.0076)-2, 
-                (int)((height*0.24)+(height*0.768)) + 3, 40, 20, 5, 5);
+        g2.drawRoundRect((int) (width * 0.0076) - 2,
+                (int) ((height * 0.24) + (height * 0.768)) + 3, 40, 20, 5, 5);
         g2.setColor(Color.white);
-        g2.fillRoundRect((int) (width*0.0076)-2, 
-                (int)((height*0.24)+(height*0.768)) + 3, 40, 20, 5, 5);
+        g2.fillRoundRect((int) (width * 0.0076) - 2,
+                (int) ((height * 0.24) + (height * 0.768)) + 3, 40, 20, 5, 5);
         g2.setColor(Color.black);
         String storeBScore = Integer.toString(storeScores[1]);
-        g2.drawString(storeBScore, (float)(width*0.0076), 
-                (float)((height*0.24)+(height*0.84) + 3));
-        
+        g2.drawString(storeBScore, (float) (width * 0.0076),
+                (float) ((height * 0.24) + (height * 0.84) + 3));
+
 
         //Create B pits
         for (int i = 0; i < 6; i++) {
@@ -94,14 +96,14 @@ public class RoundedPitBoard implements BoardStyle {
                     (int) (height * 0.08));
             //Pit
             Ellipse2D.Double currentPit = new Ellipse2D.Double(
-                    (int)(width * 0.053) + (width / 8) + (pitSpacing * i),
+                    (int) (width * 0.053) + (width / 8) + (pitSpacing * i),
                     (int) (height * 0.12), pitWidth, pitHeight);
-            
+
             //Pit Score
-            g2.drawString(Integer.toString(pitScores[11 - i]), 
-                    (int)(width * 0.053) + (width / 8) + (pitSpacing * i),
+            g2.drawString(Integer.toString(pitScores[11 - i]),
+                    (int) (width * 0.053) + (width / 8) + (pitSpacing * i),
                     (int) (height * 0.47) + 8);
-            
+
             pitShapes[11 - i] = currentPit;
             g2.draw(currentPit);
         }
@@ -111,26 +113,26 @@ public class RoundedPitBoard implements BoardStyle {
                 width / 8, height - (height / 8), 20, 20);
         storeShapes[0] = currentStore;
         g2.draw(currentStore);
-        
+
         //Draw Mancala A label
         mLabel = "MANCALA A";
         g2.setFont(new Font("Arial Bold", Font.BOLD, 20));
-        for(int i = 0; i < mLabel.length(); i++){
-            g2.drawString(Character.toString(mLabel.charAt(i)), 
-                    (float)(width*1.107) - 10, (float)(height*0.24)+(20*i));
+        for (int i = 0; i < mLabel.length(); i++) {
+            g2.drawString(Character.toString(mLabel.charAt(i)),
+                    (float) (width * 1.107) - 10, (float) (height * 0.24) + (20 * i));
         }
-        
+
         //Draw Mancala A score label;
-        g2.drawRoundRect((int)(width*1.107)-12, 
-                (int)((height*0.24)+(height*0.768)) + 3, 40, 20, 5, 5);
+        g2.drawRoundRect((int) (width * 1.107) - 12,
+                (int) ((height * 0.24) + (height * 0.768)) + 3, 40, 20, 5, 5);
         g2.setColor(Color.white);
-        g2.fillRoundRect((int)(width*1.107)-12, 
-                (int)((height*0.24)+(height*0.768)) + 3, 40, 20, 5, 5);
+        g2.fillRoundRect((int) (width * 1.107) - 12,
+                (int) ((height * 0.24) + (height * 0.768)) + 3, 40, 20, 5, 5);
         g2.setColor(Color.black);
         String storeAScore = Integer.toString(storeScores[0]);
-        g2.drawString(storeAScore, (float)(width*1.107)-12, 
-                (float)((height*0.24)+(height*0.84) + 3));
-        
+        g2.drawString(storeAScore, (float) (width * 1.107) - 12,
+                (float) ((height * 0.24) + (height * 0.84) + 3));
+
 
         //Create A pits
         for (int i = 0; i < 6; i++) {
@@ -142,31 +144,25 @@ public class RoundedPitBoard implements BoardStyle {
             Ellipse2D.Double currentPit = new Ellipse2D.Double(
                     (width * 0.053) + (width / 8) + (pitSpacing * i),
                     (height * 0.64) + 14, pitWidth, pitHeight);
-            
+
             //Pit Scores
-            g2.drawString(Integer.toString(pitScores[i]), 
-                    (int)(width * 0.053) + (width / 8) + (pitSpacing * i),
-                    (int)(height * 0.64) + 10);
-            
+            g2.drawString(Integer.toString(pitScores[i]),
+                    (int) (width * 0.053) + (width / 8) + (pitSpacing * i),
+                    (int) (height * 0.64) + 10);
+
             pitShapes[i] = currentPit;
             g2.draw(currentPit);
         }
-        this.arrangePitMarbles(g, pitScores);    
-        this.arrangeStoreMarbles(g, storeScores);
+
     }
 
-    /**
-     *
-     * @param g
-     * @param scores
-     */
     @Override
     public void arrangePitMarbles(Graphics g, int[] scores) {
-        
+
         for (int i = 0; i < 12; i++) {
             Rectangle2D r = pitShapes[i].getBounds2D();
             if (scores[i] == 1) {
-                drawMarble((int)r.getX()+32, (int)r.getY()+32, g);
+                drawMarble((int) r.getX() + 32, (int) r.getY() + 32, g);
             } else {
                 arrangePitMarblesHelper(g, scores[i], r);
             }
@@ -174,13 +170,14 @@ public class RoundedPitBoard implements BoardStyle {
     }
 
     /**
+     * Recurssive Helper method to help arrange marbles within the bounds of a
+     * specific pit
      *
-     * @param g
-     * @param n
-     * @param r
+     * @param g - Graphics Object
+     * @param n - Score of specific pit
+     * @param r - Bounding Rectangle of pit
      */
-    @Override
-    public void arrangePitMarblesHelper(Graphics g, int n, Rectangle2D r) {
+    private void arrangePitMarblesHelper(Graphics g, int n, Rectangle2D r) {
         int x = (int) r.getX() + (int) (width * 0.002);
         int y = (int) r.getY() - (int) (height * 0.005);
         if (n == 0) {
@@ -219,15 +216,15 @@ public class RoundedPitBoard implements BoardStyle {
     }
 
     /**
+     * Draws an individual marble with the next color to be used
      *
-     * @param x
-     * @param y
-     * @param g
+     * @param x - X position of marble
+     * @param y - Y position of marble
+     * @param g - Graphics Object
      */
-    @Override
-    public void drawMarble(int x, int y, Graphics g) {
+    private void drawMarble(int x, int y, Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        
+
         g2.setStroke(new BasicStroke(2));
         g2.setColor(Color.black);
         g2.drawOval(x, y, marbleSize, marbleSize);
@@ -239,20 +236,11 @@ public class RoundedPitBoard implements BoardStyle {
         g2.fillOval(x, y, marbleSize, marbleSize);
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public Shape[] getShapes() {
         return pitShapes;
     }
 
-    /**
-     *
-     * @param g
-     * @param scores
-     */
     @Override
     public void arrangeStoreMarbles(Graphics g, int[] scores) {
         for (int i = 0; i < 2; i++) {
@@ -264,13 +252,14 @@ public class RoundedPitBoard implements BoardStyle {
     }
 
     /**
+     * Recurssive Helper method to help arrange marbles within the bounds of a
+     * specific Mancala
      *
-     * @param g
-     * @param n
-     * @param r
+     * @param g - Graphics Object
+     * @param n - Score of specific Mancala
+     * @param r - Bounding Rectangle of Mancala
      */
-    @Override
-    public void arrangeStoreMarblesHelper(Graphics g, int n, Rectangle2D r) {
+    private void arrangeStoreMarblesHelper(Graphics g, int n, Rectangle2D r) {
         int x = (int) r.getX();
         int y = (int) r.getY();
         if (n == 0) {
@@ -291,19 +280,11 @@ public class RoundedPitBoard implements BoardStyle {
         }
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public int getWidth() {
         return width;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public int getHeight() {
         return height;
