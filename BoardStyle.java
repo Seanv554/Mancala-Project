@@ -1,8 +1,6 @@
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
 /*
  * Author: Sean Vail
  * Class: CS-151

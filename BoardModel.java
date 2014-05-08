@@ -11,22 +11,23 @@ import javax.swing.event.ChangeListener;
  */
 public class BoardModel {
 
-    private int storeA, storeB, storeABackUp, storeBBackUp, currentPlayer, currentPlayerBackUp, undoCount, initialValue;
+    private int storeA, storeB, storeABackUp, storeBBackUp, currentPlayer, currentPlayerBackUp, undoCount, initialValue, moveCount;
     private int[] pits, pitsBackUp, pitsCopy;
     boolean canUndo, victory;
     private ArrayList<ChangeListener> listeners; //ChangeListeners
 
-    /*
+    /**
      * Default constructor for the BoardModel class
      */
     BoardModel() {
         this(4);
     }
-    /*
+
+    /**
      * Constructor for the BoardModel class
+     *
      * @param n fills in each pit with the specified parameter
      */
-
     BoardModel(int n) {
         storeA = 0; //holds score for Player A (player 0)
         storeB = 0; //holds score for Player B (player 1)
@@ -40,16 +41,12 @@ public class BoardModel {
             pits[i] = n; //fill each pit
 
         }
+        moveCount = 0;
     }
 
-    /*
+    /**
      * Sets up the board for a new game
      */
-
-    /**
-     *
-     */
-    
     public void newGame() {
         storeA = 0; //holds score for Player A (player 0)
         storeB = 0; //holds score for Player B (player 1)
@@ -63,13 +60,11 @@ public class BoardModel {
         }
         notifyListeners();
     }
-    /*
-     * Traversal through the board. Incorporates the rules of Mancala
-     * @param x the pit the player wants to move
-     */
 
     /**
+     * Traversal through the board. Incorporates the rules of Mancala
      *
+     * @param x the pit the player wants to move
      */
     public void backUp() {
         pitsBackUp = new int[12];
@@ -78,31 +73,26 @@ public class BoardModel {
         }
         storeABackUp = storeA;
         storeBBackUp = storeB;
-        canUndo = true;
         currentPlayerBackUp = currentPlayer;
+        if(undoCount < 3){
+            canUndo = true;
+        }else{
+            canUndo = false;
+        }
     }
 
-    /*
+    /**
      * Basic traversal for the Mancala game
+     *
      * @param x the pit you want to move (choose b/w 0 to 11)
      */
-
-    /**
-     *
-     * @param x
-     */
-    
     public void move(int x) {
 
         int[] rows = pits; //copy of the array "pits"
-        int paramX = x; //copy of the parameter "x"
-        int rightStore = storeA; //keeps track of the score for PlayerA (or Player 0?)
-        int leftStore = storeB; //keeps track of the score for PlayerB (or Player 1?)
         int marbles = pits[x]; //number of marbles in each pit
+        
         int increment = 1; //increments is incremented by 1 in "traversing"
-        boolean onlyOnce = true; //USED when user selects pit 5 (bottom rightmost) & 11 (top leftmost) 
         boolean multipleTurn = false;
-        boolean marblesStolen = false;
 
         /*
          * CHECK INITIAL CONDITIONS
@@ -120,141 +110,48 @@ public class BoardModel {
             //backRow[i] = 0; //set opposite pit to 0
             //marbles --;
         }
-        if (canUndo) {
-            undoCount = 0;
-        }
+        
         backUp();
+        rows[x] = 0;
 
-        traversing: //the name of while loop
-        while (marbles > 0) {
-            //if user choose pit 5
-            if (x == 5 && onlyOnce) {
-                onlyOnce = false;
-
-                if (marbles != 0) //increment storeB
-                {
-                    storeA++;
-                    marbles--;
-                    if (marbles == 0) {
-                        multipleTurn = true;
-                    }
+        while (marbles != 0) {
+            if(x+increment == 6 && marbles != 0 && currentPlayer == 0){
+                storeA++;
+                marbles--;
+                if(marbles == 0){
+                    multipleTurn = true;
                 }
-
-                //continue traversing;
-            }
-
-            //if user choose pit 11
-            if (x == 11 && onlyOnce) {
-                onlyOnce = false;
-
-                if (marbles != 0) //increment storeB
-                {
-                    storeB++;
-                    marbles--;
-                    if (marbles == 0) {
-                        multipleTurn = true;
-                    }
-                }
-
-                //continue traversing;
-            }
-
-            //reset pit to start at 0
-            if ((x + increment) > 11) {
-                //reset increment to 0
+            }else if(x+increment == 12 && marbles != 0 && currentPlayer == 1){
+                storeB++;
+                marbles--;
                 x = 0;
                 increment = 0;
-                //continue traversing;
-            }
-
-
-            /*
-             * INCREMENT STOREA AND STOREB
-             */
-            if ((x + increment) == 5 && marbles != 0) //last pit for first player
-            {
-
-                rows[x + increment]++;
-                marbles--;
-                if (rows[x + increment] == 1 && rows[(11 - (x + increment))] != 0 && marbles == 0) { //Marble Steal, Player A, Pits 5 Special Case
-                    if (currentPlayer == 0) {
-                        storeA += rows[(11 - (x + increment))] + 1;
-                        rows[(11 - (x + increment))] = 0;
-                        rows[x + increment] = 0;
-                        marblesStolen = true;
-                    }
-                    /**
-                     * else if (currentPlayer == 1) { storeB += rows[(11 - (x +
-                     * increment))] + 1; }
-                     */
+                if(marbles == 0){
+                    multipleTurn = true;
                 }
-
-                if (marbles != 0) //increment storeB
-                {
-                    storeA++;
-                    marbles--;
-                    if (marbles == 0) {
-                        multipleTurn = true;
-                    }
-
-                    increment++;
-                }
-
-                //continue traversing;
-            }
-
-            if ((x + increment) == 11 && marbles != 0) //last pit for second player
-            {
-                rows[x + increment]++;
-                marbles--;
-                if (rows[x + increment] == 1 && rows[(11 - (x + increment))] != 0 && marbles == 0) { //Marble Steal, Player B, Pit 11 Special Case
-                    /**
-                     * if (currentPlayer == 0) { storeA += rows[(11 - (x +
-                     * increment))] + 1; } else
-                     */
-                    if (currentPlayer == 1) {
-                        storeB += rows[(11 - (x + increment))] + 1;
-                        rows[(11 - (x + increment))] = 0;
-                        rows[x + increment] = 0;
-                        marblesStolen = true;
-                    }
-
-                }
-
-                if (marbles != 0) //increment storeB
-                {
-                    storeB++;
-                    marbles--;
-                    if (marbles == 0) {
-                        multipleTurn = true;
-                    }
-                    increment++;
-                }
-
-                //reset values
+            }else if(x+increment == 12){
                 x = 0;
                 increment = 0;
-                continue traversing;
             }
-
-            if (!marblesStolen) {
-                rows[x + increment]++;
-                marbles--;
-            }
-            if (rows[x + increment] == 1 && marbles == 0 && rows[(11 - (x + increment))] != 0) {
-                if (currentPlayer == 0 && (x + increment) <= 5) {
-                    storeA += rows[(11 - (x + increment))] + 1;
-                    rows[(11 - (x + increment))] = 0;
-                    rows[x + increment] = 0;
-                } else if (currentPlayer == 1 && (x + increment) > 5) {
-                    storeB += rows[(11 - (x + increment))] + 1;
-                    rows[(11 - (x + increment))] = 0;
-                    rows[x + increment] = 0;
+            if(marbles != 0){
+                if(rows[11 - (x + increment)] != 0 && rows[x+increment] == 0 && marbles == 1){
+                    if(x+increment <= 5 && currentPlayer == 0){
+                        storeA += rows[11 - (x + increment)] + 1;
+                        rows[11 - (x + increment)] = 0;
+                        marbles--;
+                    }else if(x+increment <= 11 && x+increment > 5 && currentPlayer == 1){
+                        storeB += rows[11 - (x + increment)] + 1;
+                        rows[11 - (x + increment)] = 0;
+                        marbles--;
+                    }
                 }
-
+                if(marbles != 0){
+                    rows[x + increment]++;
+                    marbles--;
+                    increment++;
+                }
             }
-            increment++;
-
+            
         }
 
         if (!multipleTurn && getPlayer() == 0) {
@@ -262,27 +159,30 @@ public class BoardModel {
         } else if (!multipleTurn && getPlayer() == 1) {
             currentPlayer = 0;
         }
-        rows[paramX] = 0;
+        moveCount++;
+        if (moveCount == 2){
+            canUndo = true;
+            undoCount = 0;
+        }
+        
+        
         notifyListeners();
     }
 
-    /*
+    /**
      * getCanUndo returns the canUndo boolean variable
+     *
      * @return canUndo true if the player can undo and false if not
      */
-
-    /**
-     *
-     * @return
-     */
-    
-    public boolean canUndo()
-    {
+    public boolean canUndo() {
         return canUndo;
     }
-    
+    public int getUndosLeft(){
+        return 3 - undoCount;
+    }
+
     /**
-     *
+     * Undoes the last move. The player can only undo three times
      */
     public void undoLastMove() {
         if (!canUndo) {
@@ -302,19 +202,26 @@ public class BoardModel {
         storeB = storeBBackUp;
         canUndo = false;
         undoCount++;
+        moveCount = 0;
         currentPlayer = currentPlayerBackUp;
         notifyListeners();
     }
 
     /**
+     * primarily used to display the current player's turn
      *
-     * @return
+     * @return current player's turn
      */
     public int getPlayer() {
         return currentPlayer;
     }
 
     @Override
+    /**
+     * Debugging and testing method before the GUI was implemented
+     *
+     * @return a format that emulates a Mancala game being played
+     */
     public String toString() {
         String board = "";
         board += "+++++++++++++++++++++++++++++++++++++++++++++++++++\n";
@@ -335,9 +242,10 @@ public class BoardModel {
     }
 
     /**
+     * getStore() returns the score for either player A or B
      *
-     * @param player
-     * @return
+     * @param player either 0 or 1. 0 being player A and 1 being player B
+     * @return the score for the chosen player
      */
     public int getStore(int player) {
         //player a is storeA
@@ -350,54 +258,41 @@ public class BoardModel {
         return storeB;
     }
 
-    /*
-     * 
-     */
-
     /**
+     * returns the pits array which contains marbles from both sides
      *
-     * @return
+     * @return pits array which contains the marbles
      */
-    
     public int[] getPits() {
         //return (player == 0)? pitA[i] : pitB[i];
         return pits;
     }
 
-    /*
-     * returns the total number of marbles in either player A's or player B's mancalas
+    /**
+     * returns the total number of marbles in either player A's or player B's
+     * mancalas
+     *
      * @param player the player's mancala to return
      * @return storeA if parameter is 0
      * @return storeB if parameter is 1
      */
-
-    /**
-     *
-     * @param player
-     * @return
-     */
-    
     public int getTotal(int player) {
         return (player == 0) ? storeA : storeB;
     }
 
-    /*
-     * If pits 0-5 are collectively empty or pits 6-11 are collectively empty the game ends
+    /**
+     * If pits 0-5 are collectively empty or pits 6-11 are collectively empty
+     * the game ends
+     *
      * @return true if pits on either side are collectively empty
      * @return false if pits on either side are NOT collectively empty
      */
-
-    /**
-     *
-     * @return
-     */
-    
     public boolean checkVictory() {
         int sumA = 0;
         int sumB = 0;
 
         pitsCopy = new int[12];
-        for(int i = 0; i < 12; i++) {
+        for (int i = 0; i < 12; i++) {
             pitsCopy[i] = pits[i];
         }
 
@@ -408,14 +303,12 @@ public class BoardModel {
             sumB += pitsCopy[i];
         }
 
-        if (sumA == 0 || sumB == 0) 
-        {
+        if (sumA == 0 || sumB == 0) {
             storeB += sumB;
             storeA += sumA;
-            for(int i = 0; i < 6; i++)
-            {
+            for (int i = 0; i < 6; i++) {
                 pits[i] = 0;
-                pits[11-i] = 0;
+                pits[11 - i] = 0;
             }
             return true;
         }
@@ -423,18 +316,13 @@ public class BoardModel {
         return false;
     }
 
-    /*
+    /**
      * Returns the victor of the Mancala game
+     *
      * @return 0 player A won
      * @return 1 player B won
      * @return 2 player A and B tie
      */
-
-    /**
-     *
-     * @return
-     */
-    
     public int getVictor() {
         if (checkVictory() == true) {
             if (storeA > storeB) {
@@ -447,31 +335,21 @@ public class BoardModel {
 
         return 2; //2 means it's a tie
     }
-   
-
-    /*
-     * Notify listeners of a state change
-     */
 
     /**
-     *
+     * Notify listeners of a state change
      */
-    
     public void notifyListeners() {
         for (ChangeListener l : listeners) {
             l.stateChanged(null);
         }
     }
 
-    /*
-     * attach listeners with ChangeListener listerner
-     */
-
     /**
+     * attach listeners with ChangeListener listerner
      *
-     * @param listener
+     * @param listeners the ChangeListeners to attach
      */
-    
     public void attach(ChangeListener listener) {
         listeners.add(listener);
     }

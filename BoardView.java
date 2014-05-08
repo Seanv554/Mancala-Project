@@ -67,20 +67,23 @@ public class BoardView extends JPanel implements ChangeListener {
      */
     public BoardView(BoardStyle style, int initialMarbles) {
         super();
-
+        data = new BoardModel(initialMarbles);
+        
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
 
         board = new BoardPanel(style);
 
-        undoButton = new JButton("Undo");
+        undoButton = new JButton("Undo(" + data.getUndosLeft() + ")");
         undoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 data.undoLastMove();
-
             }
         });
+        if(!data.canUndo){
+            undoButton.setEnabled(false);
+        }
         JButton newGameButton = new JButton("New Game");
         newGameButton.addActionListener(new ActionListener() {
             @Override
@@ -150,7 +153,7 @@ public class BoardView extends JPanel implements ChangeListener {
         buttonPanel.add(changeStyleButton);
         buttonPanel.add(currentPlayer);
 
-        data = new BoardModel(initialMarbles);
+        
         control = new BoardController(data);
         final Shape[] shapes = style.getShapes();
         board.addMouseListener(new MouseAdapter() {
@@ -187,6 +190,8 @@ public class BoardView extends JPanel implements ChangeListener {
         } else {
             undoButton.setEnabled(true);
         }
+        undoButton.setText("Undo(" + data.getUndosLeft() + ")");
+        
         super.repaint();
     }
 
